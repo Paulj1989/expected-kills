@@ -4,7 +4,7 @@ Computing expected value metrics for volleyball, with the aim of assigning proba
 
 ## Contents
 
-- [Requirements](#requirements)rst
+- [Requirements](#requirements)
 - [Current Results](#current-results)
 - [Project Plans](#project-plans)
   - [Status](#status)
