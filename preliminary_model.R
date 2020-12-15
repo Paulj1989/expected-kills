@@ -1,4 +1,4 @@
-pacman::p_load(tidyverse, tidymodels)
+pacman::p_load(tidyverse, tidymodels, bbplot)
 
 # load data
 power5 <- read_csv("power5_2018.csv")
@@ -64,13 +64,47 @@ xg_wflow <-
 # fit model
 xg_fit <- fit(xg_wflow, power5_train)
 
-# predict test results
-predict(xg_fit, new_data = power5_test)
+# model predictions
+xg_preds <-
+  xg_fit %>%
+  predict(new_data = power5_test) %>%
+  bind_cols(power5_test %>% select(skillquality)) %>%
+  factor(skillquality)
 
-# model accuracy
-pred_accuracy <-
-  power5_test$skillquality %>%
-  bind_cols(
-    predict(xg_fit, new_data = power5_test),
-    predict(xg_fit, new_data = power5_test, type = "prob")
+# plotting confusion matrix
+xg_preds %>%
+  conf_mat(skillquality, .pred_class) %>%
+  pluck(1) %>%
+  as_tibble() %>%
+  ggplot(aes(Prediction, Truth, alpha = n)) +
+  geom_tile(show.legend = FALSE) +
+  geom_text(aes(label = n), colour = "white", alpha = 1, size = 8) +
+  bbc_style() +
+  labs(title = "Confusion Matrix Plotting Model Predictions & Actual Outcomes") +
+  theme(
+    plot.title = element_text(size = 20),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_blank()
   )
+
+# model performance metrics
+# (accuracy, precision, recall, f1 score)
+
+tibble(
+  "accuracy" =
+    metrics(xg_preds, skillquality, .pred_class) %>%
+      filter(.metric == "accuracy") %>%
+      select(.estimate),
+  "precision" =
+    precision(xg_preds, skillquality, .pred_class) %>%
+      select(.estimate),
+  "recall" =
+    recall(xg_preds, skillquality, .pred_class) %>%
+      select(.estimate),
+  "f1" =
+    f_meas(xg_preds, skillquality, .pred_class) %>%
+      select(.estimate)
+) %>%
+  unnest(cols = c(accuracy, precision, recall, f1))
