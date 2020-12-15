@@ -68,8 +68,9 @@ xg_fit <- fit(xg_wflow, power5_train)
 xg_preds <-
   xg_fit %>%
   predict(new_data = power5_test) %>%
-  bind_cols(power5_test %>% select(skillquality)) %>%
-  factor(skillquality)
+  bind_cols(power5_test %>% select(skillquality))
+
+xg_preds$skillquality <- factor(xg_preds$skillquality)
 
 # plotting confusion matrix
 xg_preds %>%
@@ -88,6 +89,8 @@ xg_preds %>%
     panel.grid.major.x = element_blank(),
     panel.grid.major.y = element_blank()
   )
+
+ggsave("conf_mat.png", width = 10, height = 8)
 
 # model performance metrics
 # (accuracy, precision, recall, f1 score)
