@@ -4,7 +4,7 @@ Computing expected value metrics for volleyball, with the aim of assigning proba
 
 ## Contents
 
-- [Requirements](#requirements)
+- [Requirements](#requirements)rst
 - [Current Results](#current-results)
 - [Project Plans](#project-plans)
   - [Status](#status)
@@ -34,6 +34,10 @@ Preliminary results have produced relatively high test accuracy:
 | Name                                 | Accuracy | Precision | Recall | F1 Score |
 | ------------------------------------ | -------- | --------- | ------ | -------- |
 | Extreme Gradient Boosting (XGBoost)  | 95.4%    | 97.4%     | 96.7%  | 97%      |
+
+The following confusion matrix plots the predicted and actual outcomes:
+
+<img src="conf_mat.png" width="750">
 
 ## Project Plans
 
