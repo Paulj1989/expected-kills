@@ -31,9 +31,9 @@ Pacman is not required, as there are alternative routes. However, this is my pre
 
 Preliminary results have produced relatively high test accuracy:
 
-| Model Name                           | Model Accuracy        |
-| ------------------------------------ | --------------------- |
-| Extreme Gradient Boosting (XGBoost)  |        95.82%         |
+| Name                                 | Accuracy | Precision | Recall | F1 Score |
+| ------------------------------------ | -------- | --------- | ------ | -------- |
+| Extreme Gradient Boosting (XGBoost)  | 95.4%    | 97.4%     | 96.7%  | 97%      |
 
 ## Project Plans
 
