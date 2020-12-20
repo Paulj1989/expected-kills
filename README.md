@@ -14,14 +14,14 @@ Computing expected value metrics for volleyball, with the aim of assigning proba
 
 ## Requirements
 
-The script used to develop the expected points model is based on the tidyverse, using the meta-packages [tidyverse](https://www.tidyverse.org/) and [tidymodels](https://www.tidymodels.org). Installing and loading both packages can be done as follows:
+The script used to develop the expected points model is based on the tidyverse, using the meta-packages [tidyverse](https://www.tidyverse.org/) and [tidymodels](https://www.tidymodels.org), as well as [bbplot](https://github.com/bbc/bbplot) for formatting the figures. Installing and loading both packages can be done as follows:
 
 ````r
 # install pacman for package management
 install.packages("pacman")
 
-# load (and install) tidyverse and tidymodels
-pacman::p_install(tidyverse, tidymodels)
+# load (and install) packages
+pacman::p_install(tidyverse, tidymodels, bbplot)
 
 ````
 
@@ -43,7 +43,7 @@ The following confusion matrix plots the predicted and actual outcomes:
 
 ### Status
 
-This project is still in progress.
+This project is still in progress. Current models are in the early stages of development.
 
 ### TODOs
 
