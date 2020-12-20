@@ -96,18 +96,18 @@ ggsave("conf_mat.png", width = 10, height = 8)
 # (accuracy, precision, recall, f1 score)
 
 tibble(
-  "accuracy" =
+  "Accuracy" =
     metrics(xg_preds, skillquality, .pred_class) %>%
       filter(.metric == "accuracy") %>%
       select(.estimate),
-  "precision" =
+  "Precision" =
     precision(xg_preds, skillquality, .pred_class) %>%
       select(.estimate),
-  "recall" =
+  "Recall" =
     recall(xg_preds, skillquality, .pred_class) %>%
       select(.estimate),
-  "f1" =
+  "F1 Score" =
     f_meas(xg_preds, skillquality, .pred_class) %>%
       select(.estimate)
 ) %>%
-  unnest(cols = c(accuracy, precision, recall, f1))
+  unnest(cols = c(Accuracy, Precision, Recall, `F1 Score`))
