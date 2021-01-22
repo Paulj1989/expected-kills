@@ -1,8 +1,8 @@
 # Volleyball Analytics
 
-Computing expected value metrics for volleyball, with the aim of assigning probabilistic values to individual plays.
+Computing expected value metrics for volleyball, with the aim of assigning probabilistic values to offensive plays.
 
-Extreme Gradient Boosting (XGBoost)
+The first stages of the analysis is an Extreme Gradient Boosting (XGBoost) model that computes Expected Kills (xK).
 ## Contents
 
 - [Requirements](#requirements)
@@ -64,7 +64,7 @@ This project is still in progress. Current models are in the early stages of dev
 - [x] Visualize model performance
 - [x] Further model testing
 - [ ] Write full notebook detailing how to carry out the xK model
-- [ ] Develop probabilistic measure of the Expected Value (eV) or Expected Value Added (eVA) of all attacking plays
+- [ ] Develop probabilistic measure of the Expected Value (eV) or Expected Value Added (eVA) of all offensive plays
 
 ## License
 
