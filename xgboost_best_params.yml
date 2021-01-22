@@ -1,0 +1,5 @@
+min_n: 15
+tree_depth: 11
+learn_rate: 0.0191484
+loss_reduction: 0.5418103
+.config: Preprocessor1_Model18
