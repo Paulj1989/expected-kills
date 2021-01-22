@@ -151,6 +151,7 @@ xgboost_best_params <- xgboost_tuned %>%
 knitr::kable(xgboost_best_params)
 
 write_yaml(xgboost_best_params, "xgboost_best_params.yml")
+# xgboost_best_params <- read_yaml("xgboost_best_params.yml")
 
 # finalize model
 xgboost_model_final <- xgboost_model %>% 
@@ -291,11 +292,11 @@ ggsave(here::here("test_plots.png"), dpi = 320, width = 16, height = 9)
 vip::vip(xgboost_fit) +
   annotate("text", 3, 0.09,
            label = "XGBoost Feature Importance",
-           family = "IBM Plex Sans", color = "grey10",
+           family = "Montserrat", color = "grey10",
            hjust = 0, size = 15, lineheight = 0.5) +
   annotate("text", 1.8, 0.09,
            label = "The Features with the Greatest Influence\non Expected Kills (xK) Model Predictions",
-           family = "IBM Plex Sans", color = "grey30",
+           family = "Montserrat", color = "grey30",
            hjust = 0, size = 9, lineheight = 1.2) +
   scale_x_discrete(labels = c("Contact Count", "Rally Count", "Set Angle",
                               "Set ID", "First Y", "Max Poss", "First X",
