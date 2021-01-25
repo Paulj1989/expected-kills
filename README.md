@@ -54,6 +54,10 @@ The following figures plot the model results on the train and test data:
 
 <img src="feature_importance.png" width="750">
 
+### Model Dependence: Shot Locations
+
+<img src="shot_locations.png" width="750">
+
 ## Project Plans
 
 This project is still in progress. Current models are in the early stages of development.
