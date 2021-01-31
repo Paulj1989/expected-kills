@@ -58,6 +58,10 @@ The following figures plot the model results on the train and test data:
 
 <img src="shot_locations.png" width="750">
 
+### Model Dependence: Start Locations
+
+<img src="start_locations.png" width="750">
+
 ## Project Plans
 
 This project is still in progress. Current models are in the early stages of development.
