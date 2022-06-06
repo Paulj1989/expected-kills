@@ -1,6 +1,6 @@
 # Expected Kills
 
-Predicting binary outcomes (Kill or Error) in volleyball, with the aim of creating an Expected Kills (xK) metric that assigns probabilistic values to offensive plays.
+Predicting binary outcomes (kill or error) in volleyball, with the aim of creating an Expected Kills (xK) metric that assigns probabilistic values to offensive plays.
 
 ## Contents
 
