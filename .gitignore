@@ -48,4 +48,4 @@ docs/
 po/*~
 
 # raw data
-data-raw/big_12.csv
+data/raw/big_12.csv
