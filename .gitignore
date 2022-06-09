@@ -49,3 +49,4 @@ po/*~
 
 # raw data
 data/raw/big_12.csv
+.Rprofile
