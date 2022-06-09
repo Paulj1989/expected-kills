@@ -1,0 +1,147 @@
+---
+title: "Specifying Preprocessing Recipe and Evaluation Metrics for Model Training"
+author: "Paul Johnson"
+date: '`r Sys.Date()`'
+output: 
+  html_document: 
+    theme: lumen
+    ig_asp: 0.8
+    fig_width: 10
+    out_width: "100%"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache = TRUE,
+  warning = FALSE,
+  message = FALSE
+  )
+
+# import packages
+library(dplyr)
+library(recipes)
+library(yardstick)
+
+# import train/test data, resamples, recipe, and metrics
+load(here::here("data", "vb_data.RData"))
+
+```
+
+
+# Preprocessing Recipe
+
+Having carried out some exploration of the data in the [previous notebook](./R/eda.Rmd) the following features were identified for the model:
+
+-   Skill Type
+-   Skill Subtype
+-   Blockers
+-   Team Setter Positions (Grouped 1-3 and 4-6)
+-   Start and End X/Y Coordinates (plus interactions)
+
+```{r recipe}
+
+model_rec <- 
+  # model formula
+  recipe(
+    evaluation_code ~
+      skill_type + skill_subtype + blockers +
+      team_setter_position + opponent_setter_position +
+      start_coordinate_x + start_coordinate_y +
+      end_coordinate_x + end_coordinate_y,
+    data = train_df
+  ) %>%
+  # convert team setter position to 2HP and 3HP groups
+  step_mutate(
+    team_setter_position =
+      case_when(
+        team_setter_position %in% c(1, 6, 5) ~ "3HP",
+        team_setter_position %in% c(2, 3, 4) ~ "2HP"
+      ),
+    # convert opponent setter position to 2HP and 3HP groups
+    opponent_setter_position =
+      case_when(
+        opponent_setter_position %in% c(1, 6, 5) ~ "3HP",
+        opponent_setter_position %in% c(2, 3, 4) ~ "2HP"
+      )
+  ) %>%
+  # convert setter position variables to factors
+  step_string2factor(
+    team_setter_position,
+    opponent_setter_position
+  ) %>%
+  # combine low frequency factor levels
+  step_other(all_nominal(), threshold = 0.05) %>%
+  # convert categorical variables to factors
+  step_dummy(all_nominal_predictors(), one_hot = TRUE) %>%
+  # specify interactions between variables
+  step_interact(
+    terms = ~ end_coordinate_x:end_coordinate_y +
+      start_coordinate_x:start_coordinate_y) %>%
+  # remove variables that are heavily correlated with others
+  step_corr(threshold = 0.8) %>%
+  # remove no variance predictors which provide no predictive information
+  step_nzv(all_predictors()) %>%
+  # balancing the target classes using synthetic minority oversampling technique (smote)
+  themis::step_smote(all_outcomes())
+  
+# store the baked recipe df
+baked_df <-
+  model_rec %>%
+  prep() %>%
+  bake(new_data=NULL)
+
+```
+
+Comments:
+
+-   Currently I am just using an interaction of the X/Y coordinates. Is there something more I could be doing?
+-   I don't think we need to normalize the numeric variables because all are between 0 - 25, and I think these are suitably similar scales. Is this fair? Or am I missing something?
+-   I've used SMOTE to balance the target classes, but I have my doubts about this approach. If model performance degrades when deployed then this should be one of the first potential issues to explore. Alternatives could be to focus on the probability thresholds or to use evaluation metrics that will address the issues that imbalanced target classes creates.
+
+```{r glimpse}
+
+# check everything looks good
+glimpse(baked_df)
+
+```
+
+```{r proportions}
+
+# check the target proportions
+baked_df %>%
+  janitor::tabyl(evaluation_code)
+```
+
+# Specify Evaluation Metrics
+
+Using ROC-AUC as the primary evaluation metric but also checking on F1-Score, J-Index, and Accuracy.
+
+```{r metrics}
+
+eval_metrics <-
+  metric_set(roc_auc, f_meas, j_index, accuracy)
+
+```
+
+This isn't really a preprocessing step but the same evaluation metrics are reused throughout the remaining notebooks, so it makes sense to set the metrics now and save on code elsewhere.
+
+# Save Recipe and Metrics
+
+We will save the preprocessing recipe and metric set so that they can be imported in the notebooks that follow.
+
+```{r save}
+
+save(
+  # recipe
+  model_rec,
+  # metrics
+  eval_metrics,
+  file = here::here(
+    "data", "preprocessed.RData"
+  )
+)
+
+```
