@@ -24,6 +24,9 @@ library(dplyr)
 library(ggplot2)
 library(janitor)
 
+# import custom functions
+miceadds::source.all(here::here("src", "functions"))
+
 # import train/test data and resamples
 load(here::here("data", "vb_data.RData"))
 
@@ -163,12 +166,6 @@ train_df %>%
 However, the trusty proportions can help us here! It looks like all three subtypes are pretty close to the average outcome proportions, but soft spikes/topspins do produce a \~2% lower than average kills.
 
 I don't think subtypes will be entirely useless here, but the value in including it as a feature in our model is certainly limited. Perhaps we can draw out more information if we interact the skill subtype with the skill type?
-
-## Type * Subtype
-
-```{r skill_interaction}
-
-```
 
 ## Start & End Locations
 
