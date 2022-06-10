@@ -35,15 +35,10 @@ theme_set(theme_minimal(base_size = 14))
 
 ```
 
-The first step in the machine learning process (and any statistical analysis project) is the Exploratory Data Analysis (EDA).
-
-This is an important part of the process because otherwise you're going in blind. It's very difficult to know how to build a model to predict an outcome when you don't know what your data looks like, how your targets and features are distributed, and what issues exist in the data that will need to be resolved first.
-
-Because some initial data processing has been carried out previously, the goal here is to identify features that appear to have some predictive power, whether they exist in the data already or have to be extracted from the data in its current form, and to understand what transformations will be needed in the preprocessing recipe to maximize the predictive capabilities of our eventual feature set.
+The first step is to carry out Exploratory Data Analysis (EDA), with the intention of gaining an understanding of how the data is structured, identifying any issues in the data that need to be resolved, and identifying and extracting any potential features for the model.
 
 # Understanding the Structure of the Data
 
-It's important to understand what the dataset looks like in its full form. How many observations are there in the training set, and how many potential features do we have?
 
 ```{r glimpse}
 
@@ -51,8 +46,6 @@ It's important to understand what the dataset looks like in its full form. How m
 glimpse(train_df)
 
 ```
-
-The *glimpse()* function is a really good starting point for understanding the data because it gives us all sorts of useful information at a glance.
 
 There are plenty of observations (11,165 rows), and we've got 15 columns, which means 1 target variable and 14 potential features, however, part of the earlier data processing step was selecting variables that could be relevant to predicting kills, so the 14 variables should be promising.
 
@@ -62,7 +55,7 @@ Several of the character variables look like they could be transformed to be mor
 
 # Visualizing the Binary Target
 
-The target variable is *evaluation_code*. Though in the raw data it isn't a binary variable, we are interested in just two of the variable's values: kills and errors. Kills are the positive event level (points scored by the team making the play), while errors are the negative event level.
+The target variable is *evaluation_code*. Though in the raw data it isn't a binary variable, we are interested in just two of the variable's values (kills and errors) so it was transformed in the initial processing step. Kills are the positive event level (points scored by the team making the play), while errors are the negative event level.
 
 ```{r target-frequencies}
 
@@ -110,7 +103,7 @@ train_df %>%
 
 ```
 
-It looks like there's some variance in skill type split by the outcome. Head ball attacks seem to have a pretty good chance of ending as a kill, and both quick ball attacks and slide ball attacks look like they're disproportionately likely to be kills.
+It looks like there's some variance in skill type split by the outcome.
 
 ```{r skill-type-props}
 
@@ -122,11 +115,10 @@ train_df %>%
 
 It's a little easier to make sense of this by looking at the skill type percentages split by outcome. Given that kills and errors are split \~70/30, we can compare skill types that have higher or lower proportions.
 
-The skill type plot made it look like head ball attacks probably disproportionately favor kills, and this does appear to be the case. The difference is relatively small, as head ball attacks lead to \~2% higher than average kills, but that difference is potentially quite meaningful.
-
-Interestingly, it seems that the plot may be a little misleading (or I'm stupid) when it comes to slide ball attacks. It looks like they led to a higher proportion of kills, however it looks like they actually lead to a little bit less than 2% fewer kills). This is probably due to larger quick ball attacks bar next to the slide ball attacks bar giving me the wrong impression.
-
-However, the good news is that quick ball attacks definitely lead to a higher proportion of kills, as they result in \~6% more kills than average. And in contrast, high ball attacks and other attacks tend to produce worse than average outcomes (I'm guessing that the other attacks come as a result of limited options available to the attacking team).
+-   Head ball attacks lead to \~2% higher than average kills, but that difference is potentially meaningful.
+-   Slide ball attacks lead to a little bit less than 2% fewer kills (which was hard to infer from the plot).
+-   Quick ball attacks result in \~6% more kills than average.
+-   High ball attacks and other attacks tend to produce worse than average outcomes (I'm guessing that the other attacks come as a result of limited options available to the attacking team).
 
 All this suggests there's definitely some predictive power in this feature.
 
@@ -165,7 +157,9 @@ train_df %>%
 
 However, the trusty proportions can help us here! It looks like all three subtypes are pretty close to the average outcome proportions, but soft spikes/topspins do produce a \~2% lower than average kills.
 
-I don't think subtypes will be entirely useless here, but the value in including it as a feature in our model is certainly limited. Perhaps we can draw out more information if we interact the skill subtype with the skill type?
+I don't think subtypes will be entirely useless here, but the value in including it as a feature in our model is certainly limited. 
+
+**Perhaps we can draw out more information if we interact the skill subtype with the skill type?**
 
 ## Start & End Locations
 
@@ -220,7 +214,7 @@ train_df %>%
 
 ```
 
-There's plenty of variance across different numbers of blockers, which isn't especially surprising.
+There's plenty of variance across different numbers of blockers, which isn't especially surprising. 
 
 ## Team/Opponent Setter Position
 
@@ -250,9 +244,9 @@ train_df %>%
   labs(x = NULL, y = NULL, fill = NULL)
 ```
 
-There is greater variance with opponent setter position than team setter position. 
+There isn't tons of variance across different values of team and opponent setter position, though it's possible that these small differences matter. There appears to be slightly more variance across opponent setter position, though it's not clear if this is by chance.
 
-Do the two interact meaningfully?
+**Do the two have meaningful interactions?**
 
 ## Rotation
 
@@ -266,8 +260,7 @@ train_df %>%
   adorn_percentages()
 
 ```
-
-I suspect that the small amount of variation we see across the six rotations is probably random variation.
+Rotation is just another representation of team setter position.
 
 ## Contact
 
@@ -277,5 +270,4 @@ train_df %>%
   tabyl(contact)
 
 ```
-
-There's only eleven that are 1 or 2, everything else is 3. 
+There's virtually no variation across the three values of contact (1, 2, 3). Of 11,165 observations only 11 do not equal 3.
