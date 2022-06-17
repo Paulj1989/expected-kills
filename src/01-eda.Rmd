@@ -4,17 +4,16 @@ author: "Paul Johnson"
 date: '`r Sys.Date()`'
 output: 
   html_document: 
+    theme: lumen
     ig_asp: 0.8
     fig_width: 10
-    out_width: 100%
-editor_options: 
-  chunk_output_type: inline
+    out_width: "100%"
 ---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
-  cache = TRUE,
+  cache = FALSE,
   warning = FALSE,
   message = FALSE
   )
@@ -24,11 +23,12 @@ library(dplyr)
 library(ggplot2)
 library(janitor)
 
-# import custom functions
-miceadds::source.all(here::here("src", "functions"))
 
 # import train/test data and resamples
 load(here::here("data", "vb_data.RData"))
+
+# import custom functions
+miceadds::source.all(here::here("src", "functions"))
 
 # set ggplot theme
 theme_set(theme_minimal(base_size = 14))
@@ -93,13 +93,11 @@ train_df %>%
 
 Just over 50% of the skill type's are head ball attacks, while the remaining 50% is mostly split between quick ball attacks, high ball attacks, and slide ball attacks. The distribution of the skill types seems pretty reasonable (despite the overwhelming dominance of head ball attacks), as it's only 'other attack' that is really poorly represented.
 
+*I've created functions to plot the different charts to avoid repetition. The functions can be found in '~/src/functions'.*
+
 ```{r skill-type}
 
-train_df %>%
-  ggplot(aes(evaluation_code, fill = skill_type)) +
-  geom_bar(position = "dodge") +
-  scale_fill_viridis_d() +
-  labs(x = NULL, y = NULL, fill = NULL)
+plot_bars(skill_type)
 
 ```
 
@@ -137,11 +135,7 @@ The vast majority of the subtypes are hard spikes (\~88%), which limits how usef
 
 ```{r skill-subtype}
 
-train_df %>%
-  ggplot(aes(evaluation_code, fill = skill_subtype)) +
-  geom_bar(position = "dodge") +
-  scale_fill_viridis_d() +
-  labs(x = NULL, y = NULL, fill = NULL)
+plot_bars(skill_subtype)
 
 ```
 
@@ -171,23 +165,13 @@ I think we gain more from the x, y coordinates than the zones and subzones. The 
 
 ```{r start-coordinates-plot}
 
-train_df %>%
-  ggplot(aes(x = start_coordinate_x, y = start_coordinate_y)) +
-  geom_hex() +
-  scale_fill_viridis_c() +
-  labs(fill = NULL) +
-  facet_wrap(~evaluation_code)
+plot_coordinates(start_coordinate_x, start_coordinate_y)
 
 ```
 
 ```{r end-coordinates-plot}
 
-train_df %>%
-  ggplot(aes(x = end_coordinate_x, y = end_coordinate_y)) +
-  geom_hex() +
-  scale_fill_viridis_c() +
-  labs(fill = NULL) +
-  facet_wrap(~evaluation_code)
+plot_coordinates(end_coordinate_x, end_coordinate_y)
 
 ```
 
@@ -206,11 +190,7 @@ train_df %>%
   tabyl(blockers, evaluation_code) %>%
   adorn_percentages()
 
-train_df %>%
-  ggplot(aes(evaluation_code, fill = as.factor(blockers))) +
-  geom_bar(position = "dodge") +
-  scale_fill_viridis_d(direction = -1) +
-  labs(x = NULL, y = NULL, fill = NULL)
+plot_bars(as.factor(blockers))
 
 ```
 
@@ -231,17 +211,10 @@ train_df %>%
   tabyl(opponent_setter_position, evaluation_code) %>%
   adorn_percentages()
 
-train_df %>%
-  ggplot(aes(evaluation_code, fill = as.factor(team_setter_position))) +
-  geom_bar(position = "dodge") +
-  scale_fill_viridis_d() +
-  labs(x = NULL, y = NULL, fill = NULL)
+plot_bars(as.factor(team_setter_position))
 
-train_df %>%
-  ggplot(aes(evaluation_code, fill = as.factor(opponent_setter_position))) +
-  geom_bar(position = "dodge") +
-  scale_fill_viridis_d() +
-  labs(x = NULL, y = NULL, fill = NULL)
+plot_bars(as.factor(opponent_setter_position))
+
 ```
 
 There isn't tons of variance across different values of team and opponent setter position, though it's possible that these small differences matter. There appears to be slightly more variance across opponent setter position, though it's not clear if this is by chance.
