@@ -50,3 +50,5 @@ po/*~
 # raw data
 data/raw/big_12.csv
 .Rprofile
+data/tuned_models.rds
+data/trained_models.rds
