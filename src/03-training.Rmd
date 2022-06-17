@@ -1,0 +1,198 @@
+---
+title: 'Training & Identifying Best Performing Models'
+author: "Paul Johnson"
+date: '`r Sys.Date()`'
+output: 
+  html_document: 
+    theme: lumen
+    ig_asp: 0.8
+    fig_width: 10
+    out_width: "100%"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache = FALSE,
+  warning = FALSE,
+  message = FALSE
+  )
+
+# import packages
+library(dplyr)
+library(ggplot2)
+library(parsnip)
+library(yardstick)
+library(workflowsets)
+library(discrim)
+
+# import train/test data, resamples, recipe, and metrics
+load(here::here("data", "vb_data.RData"))
+load(here::here("data", "preprocessed.RData"))
+
+# import custom functions
+miceadds::source.all(here::here("src", "functions"))
+
+# set ggplot theme
+theme_set(theme_minimal(base_size = 14))
+
+# specify that tidymodels output needs to work on a dark theme
+options(tidymodels.dark = TRUE)
+
+# specify parallelization for faster computation
+# cores <- parallel::detectCores() - 1
+# cl <- parallel::makeCluster(cores)
+# doParallel::registerDoParallel(cl)
+
+# unregister cluster
+# parallel::stopCluster(cl)
+```
+
+This notebook carries out the training process for the candidate models and evaluates performance for each one, helping to select a small subset of models that can be optimized and evaluated further.
+
+# Model Training
+
+## Define Candidate Models
+
+There are a number of different algorithms that might prove to be the best approach to predicting outcomes in volleyball. We want to test the performance of the basic form of several of these algorithms in order to identify the candidates for the tuning process.
+
+We will try the following algorithms:
+
+-   Logistic Regression
+-   Naive Bayes
+-   K-Nearest Neighbours (KNN)
+-   Neural Network
+-   Random Forest
+-   XGBoost
+
+```{r models}
+
+# logistic regression
+log_mod <- 
+  logistic_reg(
+    penalty = 0.2
+  ) %>%
+  set_mode('classification') %>%
+  set_engine('glm')
+
+# naive bayes
+nb_mod <-
+  naive_Bayes() %>%
+  set_mode('classification') %>%
+  set_engine('klaR')
+
+# knn
+knn_mod <- 
+  nearest_neighbor() %>% 
+  set_mode("classification") %>%
+  set_engine("kknn")
+
+# nnet
+nnet_mod <- 
+  mlp() %>% 
+  set_mode("classification") %>%
+  set_engine("keras",
+             verbose = FALSE)
+
+# random forest
+rf_mod <-
+  rand_forest(
+    trees = 1000
+  ) %>%
+  set_mode("classification") %>%
+  set_engine("ranger")
+
+# xgboost
+xgb_mod <-
+  boost_tree(
+    trees = 1000,
+    stop_iter = 10
+  ) %>%
+  set_mode("classification") %>%
+  set_engine("xgboost")
+
+```
+
+## Set Workflow Pipeline
+
+```{r workflow}
+
+# specify the workflow set
+model_pipeline <- 
+   workflow_set(
+     # preprocessing steps
+      preproc = list(model_rec),
+      # models to be trained
+      models = 
+        list(
+          log = log_mod,
+          nb = nb_mod,
+          knn = knn_mod,
+          nnet = nnet_mod,
+          rf = rf_mod,
+          xgb = xgb_mod)
+   ) %>%
+  # simplify workflow id for each model
+  mutate(wflow_id = gsub("(recipe_)", "", wflow_id))
+
+```
+
+## Fit Candidates to Resamples
+
+```{r fit, cache = TRUE}
+
+# fit models on resamples
+train_models <-
+  model_pipeline %>%
+  # map across all preprocessing steps and models in workflow set
+   workflow_map(
+     "fit_resamples",
+     # set seed for reproducibility
+     seed = 456,
+     # identify resamples
+     resamples = train_folds,
+     # metrics for evaluating performance
+     metrics = eval_metrics,
+     # log results throughout training process
+     verbose = TRUE)
+
+```
+
+```{r save-model}
+
+readr::write_rds(train_models, here::here("data", "trained_models.rds"))
+
+```
+
+The Logistic Regression is producing predictions from a "rank-deficient fit". I think this means there are multicollinearity issues going on. I'm not sure what the source of the problem is.
+
+## Evaluate Performance
+
+We can evaluate model performance using the {workflowsets} function *rank_results()* but getting results that are easily intuited can be a little fiddly, so we will use a custom function *evaluate_performance()* that is defined in the functions directory.
+
+```{r evaluation}
+
+train_models %>%
+  evaluate_performance("roc_auc")
+
+train_models %>%
+  evaluate_performance("accuracy")
+
+train_models %>%
+  evaluate_performance("f_meas")
+
+train_models %>%
+  evaluate_performance("j_index")
+
+# visualize performance across all metrics
+autoplot(train_models) +
+    scale_color_viridis_d()
+
+```
+
+Summarizing performance:
+
+-   The Logistic Regression is performing pretty poorly on all of the evaluation metrics.
+-   The Neural Network (MLP) is lagging pretty far behind the best performing models too. However there is significant variance across the metrics and the large confidence intervals. There's a good chance that this model would improve significantly if optimized (though the fact it is lagging far behind suggests it's not worth it).
+-   The KNN and the Naive Bayes are performing pretty well, though are generally further behind the best candidates.
+-   The Random Forest and XGBoost are performing significantly better than the other candidates, across the four metrics.
