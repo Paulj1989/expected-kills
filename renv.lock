@@ -9,6 +9,14 @@
     ]
   },
   "Packages": {
+    "DBI": {
+      "Package": "DBI",
+      "Version": "1.1.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "dcd1743af4336156873e3ce3c950b8b9",
+      "Requirements": []
+    },
     "DiceDesign": {
       "Package": "DiceDesign",
       "Version": "1.9",
@@ -38,10 +46,10 @@
     },
     "MASS": {
       "Package": "MASS",
-      "Version": "7.3-56",
+      "Version": "7.3-57",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "af0e1955cb80bb36b7988cc657db261e",
+      "Hash": "71476c1d88d1ebdf31580e5a257d5d31",
       "Requirements": []
     },
     "Matrix": {
@@ -62,28 +70,12 @@
       "Hash": "470851b6d5d0ac559e9d01bb352b4021",
       "Requirements": []
     },
-    "RANN": {
-      "Package": "RANN",
-      "Version": "2.6.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d128ea05a972d3e67c6f39de52c72bd7",
-      "Requirements": []
-    },
     "RColorBrewer": {
       "Package": "RColorBrewer",
       "Version": "1.1-3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "45f0398006e83a5b10b72a90663d8d8c",
-      "Requirements": []
-    },
-    "ROSE": {
-      "Package": "ROSE",
-      "Version": "0.0-4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c6e79999925f0db3f2d88b187d014bf8",
       "Requirements": []
     },
     "Rcpp": {
@@ -93,6 +85,16 @@
       "Repository": "CRAN",
       "Hash": "32e79b908fda56ee57fe518a8d37b864",
       "Requirements": []
+    },
+    "RcppArmadillo": {
+      "Package": "RcppArmadillo",
+      "Version": "0.11.1.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "631929e53829901562986c504f86104b",
+      "Requirements": [
+        "Rcpp"
+      ]
     },
     "RcppTOML": {
       "Package": "RcppTOML",
@@ -300,6 +302,21 @@
       "Hash": "cf6b206a045a684728c3267ef7596190",
       "Requirements": []
     },
+    "discrim": {
+      "Package": "discrim",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "92b3bfcd87fcb3c562b64062ef4fe495",
+      "Requirements": [
+        "dials",
+        "parsnip",
+        "purrr",
+        "rlang",
+        "tibble",
+        "withr"
+      ]
+    },
     "dplyr": {
       "Package": "dplyr",
       "Version": "1.0.9",
@@ -492,10 +509,10 @@
     },
     "hardhat": {
       "Package": "hardhat",
-      "Version": "1.0.0",
+      "Version": "1.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "73742a53bdbc1911bfbb2b67ac5518a1",
+      "Hash": "b513a8bb3985a2367a0f8014962c6c34",
       "Requirements": [
         "glue",
         "rlang",
@@ -574,10 +591,10 @@
     },
     "infer": {
       "Package": "infer",
-      "Version": "1.0.0",
+      "Version": "1.0.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "74128662081cedb158fc98d6dae73c0e",
+      "Hash": "ec3a41e963bc24f53ff06f3137742ed7",
       "Requirements": [
         "broom",
         "dplyr",
@@ -805,6 +822,47 @@
         "nlme"
       ]
     },
+    "mice": {
+      "Package": "mice",
+      "Version": "3.14.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "437fa44664cf8e2dd07b9a70ec65d969",
+      "Requirements": [
+        "Rcpp",
+        "broom",
+        "cpp11",
+        "dplyr",
+        "generics",
+        "lattice",
+        "rlang",
+        "tidyr",
+        "withr"
+      ]
+    },
+    "miceadds": {
+      "Package": "miceadds",
+      "Version": "3.13-12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "43069ce2601b877356361f62f828e79b",
+      "Requirements": [
+        "Rcpp",
+        "RcppArmadillo",
+        "mice",
+        "mitools"
+      ]
+    },
+    "mitools": {
+      "Package": "mitools",
+      "Version": "2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a4b659bd0528226724d55034f11ed7cb",
+      "Requirements": [
+        "DBI"
+      ]
+    },
     "modeldata": {
       "Package": "modeldata",
       "Version": "0.1.1",
@@ -859,15 +917,15 @@
     },
     "parsnip": {
       "Package": "parsnip",
-      "Version": "0.2.1.9002",
+      "Version": "0.2.1.9003",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "parsnip",
       "RemoteUsername": "tidymodels",
+      "RemoteRepo": "parsnip",
       "RemoteRef": "HEAD",
-      "RemoteSha": "34e27a249393bcbd396001063423158a1b66fd98",
-      "Hash": "2ed40a05da5b6fd94a937bcceeb6365b",
+      "RemoteSha": "68a4a49257420255a031e2e9df93dc72df5308c6",
+      "RemoteHost": "api.github.com",
+      "Hash": "cca761aa9e390ea3c931ec782d923d11",
       "Requirements": [
         "cli",
         "dplyr",
@@ -952,10 +1010,10 @@
     },
     "processx": {
       "Package": "processx",
-      "Version": "3.5.3",
+      "Version": "3.6.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "8bbae1a548d0d3fdf6647bdd9d35bf6d",
+      "Hash": "4acae60adac4791e8c8833d8494f270d",
       "Requirements": [
         "R6",
         "ps"
@@ -1299,27 +1357,6 @@
         "tidyselect",
         "whisker",
         "yaml"
-      ]
-    },
-    "themis": {
-      "Package": "themis",
-      "Version": "0.2.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "2eb3ebc78e20f54b032fe75fb4ef6283",
-      "Requirements": [
-        "RANN",
-        "ROSE",
-        "dplyr",
-        "generics",
-        "glue",
-        "gower",
-        "lifecycle",
-        "purrr",
-        "recipes",
-        "rlang",
-        "tibble",
-        "withr"
       ]
     },
     "tibble": {
