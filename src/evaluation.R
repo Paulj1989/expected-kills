@@ -12,7 +12,7 @@ suppressPackageStartupMessages({
 })
 
 # import trained models
-train_models <- 
+train_models <-
   readr::read_rds(here::here("outputs", "models", "trained_models.rds"))
 
 # import function for saving metrics
@@ -20,6 +20,7 @@ source(here::here("src", "functions", "save_metrics.R"))
 
 # set ggplot theme
 theme_set(theme_minimal(base_size = 14))
+theme_update(plot.background = element_rect(colour = "white"))
 
 # Evaluate Performance ----
 
@@ -41,8 +42,7 @@ for (i in seq_along(eval_sets)) {
   yaml::write_yaml(
     eval_sets[[i]],
     file =
-      here::here("outputs", "metrics", paste0(names(eval_sets[i]), ".yaml")
-      )
+      here::here("outputs", "metrics", paste0(names(eval_sets[i]), ".yaml"))
   )
 }
 
@@ -55,5 +55,6 @@ eval_plot <-
 
 ggsave(
   here::here("outputs", "plots", "train_eval.png"),
-  eval_plot, width = 12, height = 6
+  eval_plot,
+  width = 12, height = 6
 )
