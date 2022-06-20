@@ -36,8 +36,6 @@ big12_raw <- readr::read_csv(here::here("data", "raw", "big_12.csv"))
 ```{r process}
 
 df <- big12_raw %>%
-  # shuffle data
-  slice_sample(n = nrow(big12_raw)) %>%
   # filter rows to return relevant subset
   filter(skill == "Attack") %>%
   mutate(
