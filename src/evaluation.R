@@ -18,6 +18,9 @@ train_models <-
 # import function for saving metrics
 source(here::here("src", "functions", "save_metrics.R"))
 
+# set ggplot theme
+theme_set(theme_minimal(base_size = 14))
+
 # Evaluate Performance ----
 
 ## Metrics ----

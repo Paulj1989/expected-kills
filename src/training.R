@@ -5,7 +5,6 @@
 # import packages
 suppressPackageStartupMessages({
   library(dplyr)
-  library(ggplot2)
   library(parsnip)
   library(yardstick)
   library(workflowsets)
@@ -18,9 +17,6 @@ load(here::here("data", "intermediate", "splits.RData"))
 
 # import recipe
 model_rec <- readr::read_rds(here::here("data", "intermediate", "recipe.rds"))
-
-# set ggplot theme
-theme_set(theme_minimal(base_size = 14))
 
 # specify that tidymodels output needs to work on a dark theme
 options(tidymodels.dark = TRUE)
