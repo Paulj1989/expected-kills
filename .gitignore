@@ -41,6 +41,9 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
+# R Profile
+.Rprofile
+
 # pkgdown site
 docs/
 
@@ -49,6 +52,12 @@ po/*~
 
 # raw data
 data/raw/big_12.csv
-.Rprofile
-data/tuned_models.rds
-data/trained_models.rds
+
+# intermediate data
+data/intermediate/cleaned_data.rds
+data/intermediate/splits.RData
+data/intermediate/recipe.rds
+
+# model objects
+outputs/models/tuned_models.rds
+outputs/models/trained_models.rds
