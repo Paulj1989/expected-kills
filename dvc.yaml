@@ -1,0 +1,51 @@
+stages:
+  process_data:
+    cmd: Rscript src/data_processing.R
+    deps:
+    - data/raw/big_12.csv
+    - src/data_processing.R
+    outs:
+    - data/intermediate/cleaned_data.rds
+  split_data:
+    cmd: Rscript src/train_test_splits.R
+    deps:
+    - data/intermediate/cleaned_data.rds
+    - src/train_test_splits.R
+    outs:
+    - data/intermediate/splits.RData
+  set_recipe:
+    cmd: Rscript src/preprocessing_recipe.R
+    deps:
+    - data/intermediate/splits.RData
+    - src/preprocessing_recipe.R
+    outs:
+    - data/intermediate/recipe.rds
+  train:
+    cmd: Rscript src/training.R
+    deps:
+    - data/intermediate/splits.RData
+    - data/intermediate/recipe.rds
+    - src/training.R
+    outs:
+    - outputs/models/trained_models.rds
+  evaluate_training:
+    cmd: Rscript src/evaluation.R
+    deps:
+    - outputs/models/trained_models.rds
+    - src/evaluation.R
+    metrics:
+    - outputs/metrics/log.yaml:
+        cache: false
+    - outputs/metrics/knn.yaml:
+        cache: false
+    - outputs/metrics/nb.yaml:
+        cache: false
+    - outputs/metrics/nnet.yaml:
+        cache: false
+    - outputs/metrics/rf.yaml:
+        cache: false
+    - outputs/metrics/xgb.yaml:
+        cache: false
+    plots:
+    - outputs/plots/train_eval.png:
+        cache: false

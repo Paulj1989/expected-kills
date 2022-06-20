@@ -1,0 +1,116 @@
+schema: '2.0'
+stages:
+  data_processing:
+    cmd: Rscript src/data_processing.R
+    deps:
+    - path: data/raw/big_12.csv
+      md5: d0dedb2f4421737b5f2501d04d9e6a5f
+      size: 273348181
+    - path: src/
+      md5: d417d4db30f6805890d8da33a95d2707.dir
+      size: 9178
+      nfiles: 6
+    outs:
+    - path: data/vb_data.RData
+      md5: 5f8e66af1880134808cefc41112ef255
+      size: 2105468
+  preprocessing_steps:
+    cmd: Rscript src/preprocessing_recipe.R
+    deps:
+    - path: data/vb_data.RData
+      md5: 5f8e66af1880134808cefc41112ef255
+      size: 2105468
+    - path: src/
+      md5: bc5bb761b6e1507173bfb816fe541d6c.dir
+      size: 8491
+      nfiles: 6
+    outs:
+    - path: data/preprocessed.RData
+      md5: 4c2357cb4823a6746afbf5041955f3ca
+      size: 646502
+  train:
+    cmd: Rscript src/training.R
+    deps:
+    - path: data/intermediate/recipe.rds
+      md5: 1238a9b8980b7ad82e42426c0862f1b3
+      size: 8661506
+    - path: data/intermediate/splits.RData
+      md5: df1406c23248d5ca73e1e0a01ab1d416
+      size: 1906683
+    - path: src/training.R
+      md5: 5a5a41fcbe74a032a47375328d9eb1b3
+      size: 2337
+    outs:
+    - path: outputs/models/trained_models.rds
+      md5: bec3659789c4416efbeef13d2978bffe
+      size: 228044204
+  process_data:
+    cmd: Rscript src/data_processing.R
+    deps:
+    - path: data/raw/big_12.csv
+      md5: d0dedb2f4421737b5f2501d04d9e6a5f
+      size: 273348181
+    - path: src/data_processing.R
+      md5: d2a8ee9ee147f9796a27a9b1fa8ec546
+      size: 1937
+    outs:
+    - path: data/intermediate/cleaned_data.rds
+      md5: 26f6249c391927eb1165ff869526a426
+      size: 2890167
+  split_data:
+    cmd: Rscript src/train_test_splits.R
+    deps:
+    - path: data/intermediate/cleaned_data.rds
+      md5: 26f6249c391927eb1165ff869526a426
+      size: 2890167
+    - path: src/train_test_splits.R
+      md5: 1662105c6fd8aa337d144c22061749bc
+      size: 802
+    outs:
+    - path: data/intermediate/splits.RData
+      md5: df1406c23248d5ca73e1e0a01ab1d416
+      size: 1906683
+  set_recipe:
+    cmd: Rscript src/preprocessing_recipe.R
+    deps:
+    - path: data/intermediate/splits.RData
+      md5: df1406c23248d5ca73e1e0a01ab1d416
+      size: 1906683
+    - path: src/preprocessing_recipe.R
+      md5: 3019dafcec42683d5734dcfabcbab2ef
+      size: 1769
+    outs:
+    - path: data/intermediate/recipe.rds
+      md5: 1238a9b8980b7ad82e42426c0862f1b3
+      size: 8661506
+  evaluate_training:
+    cmd: Rscript src/evaluation.R
+    deps:
+    - path: outputs/models/trained_models.rds
+      md5: bec3659789c4416efbeef13d2978bffe
+      size: 228044204
+    - path: src/evaluation.R
+      md5: 2801919145daedd6978f4fe0cb8028b0
+      size: 1081
+    outs:
+    - path: outputs/metrics/knn.yaml
+      md5: 9ddc3999390ce75ef69099476b4ab441
+      size: 73
+    - path: outputs/metrics/log.yaml
+      md5: 6c7b20116011b3959308fc10dfd6885f
+      size: 76
+    - path: outputs/metrics/nb.yaml
+      md5: 7bd2a0fbf16893c3d5886c9fddf6a6b4
+      size: 76
+    - path: outputs/metrics/nnet.yaml
+      md5: 9aeb5d3daaf36d5f74ef6b578f58df11
+      size: 76
+    - path: outputs/metrics/rf.yaml
+      md5: b58bc8d4923a82ff227bc0d39d78c6bf
+      size: 76
+    - path: outputs/metrics/xgb.yaml
+      md5: ae2f3b03a874a9f8b58aaebd7603747f
+      size: 76
+    - path: outputs/plots/train_eval.png
+      md5: 241e2e86baf3ee969b701c13f184bd93
+      size: 125335
