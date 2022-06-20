@@ -38,11 +38,11 @@ stages:
       md5: df1406c23248d5ca73e1e0a01ab1d416
       size: 1906683
     - path: src/training.R
-      md5: 5a5a41fcbe74a032a47375328d9eb1b3
-      size: 2337
+      md5: 7931ac5d756523afa92daa064d7c86ec
+      size: 2257
     outs:
     - path: outputs/models/trained_models.rds
-      md5: bec3659789c4416efbeef13d2978bffe
+      md5: e71d757a6bcfdf34819359b8468f3e58
       size: 228044204
   process_data:
     cmd: Rscript src/data_processing.R
@@ -87,11 +87,11 @@ stages:
     cmd: Rscript src/evaluation.R
     deps:
     - path: outputs/models/trained_models.rds
-      md5: bec3659789c4416efbeef13d2978bffe
+      md5: e71d757a6bcfdf34819359b8468f3e58
       size: 228044204
     - path: src/evaluation.R
-      md5: 2801919145daedd6978f4fe0cb8028b0
-      size: 1081
+      md5: a6a6ef66a73c7a829f6b5366a705e805
+      size: 1200
     outs:
     - path: outputs/metrics/knn.yaml
       md5: 9ddc3999390ce75ef69099476b4ab441
@@ -103,7 +103,7 @@ stages:
       md5: 7bd2a0fbf16893c3d5886c9fddf6a6b4
       size: 76
     - path: outputs/metrics/nnet.yaml
-      md5: 9aeb5d3daaf36d5f74ef6b578f58df11
+      md5: 2ef3e444af3d054be15c8193e500abc4
       size: 76
     - path: outputs/metrics/rf.yaml
       md5: b58bc8d4923a82ff227bc0d39d78c6bf
@@ -112,5 +112,5 @@ stages:
       md5: ae2f3b03a874a9f8b58aaebd7603747f
       size: 76
     - path: outputs/plots/train_eval.png
-      md5: 241e2e86baf3ee969b701c13f184bd93
-      size: 125335
+      md5: bf8f4da8780aa0bbf9d184fe6b19687c
+      size: 147615
