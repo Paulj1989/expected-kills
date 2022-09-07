@@ -1,0 +1,15 @@
+project:
+  title: "expected-kills"
+
+toc: true
+toc-depth: 3
+
+format: 
+  gfm:
+    fig-width: 12
+    fig-height: 8
+    fig-align: center
+    warning: false
+
+editor_options: 
+  chunk_output_type: console
