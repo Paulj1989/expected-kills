@@ -1,40 +1,27 @@
----
-title: "Process Raw Data and Split into Test/Train Sets"
-author: "Paul Johnson"
-date: '`r Sys.Date()`'
-output: 
-  html_document: 
-    theme: lumen
----
+Process Raw Data and Split into Test/Train Sets
+================
+Paul Johnson
+2022-09-07
 
-```{r setup, include=FALSE}
-
-knitr::opts_chunk$set(
-  echo = TRUE,
-  cache = FALSE,
-  warning = FALSE,
-  message = FALSE
-  )
-
-# import packages
-library(dplyr)
-library(rsample)
-
-```
+- <a href="#import-data" id="toc-import-data">Import Data</a>
+- <a href="#clean-and-process-data-and-select-relevant-columns"
+  id="toc-clean-and-process-data-and-select-relevant-columns">Clean and
+  Process Data and Select Relevant Columns</a>
+- <a href="#split-data-in-to-traintest-sets-and-resamples"
+  id="toc-split-data-in-to-traintest-sets-and-resamples">Split Data in to
+  Train/Test Sets and Resamples</a>
+- <a href="#save-data" id="toc-save-data">Save Data</a>
 
 # Import Data
 
-```{r import}
-
+``` r
 # load raw data
 big12_raw <- readr::read_csv(here::here("data", "raw", "big_12.csv"))
-
 ```
 
 # Clean and Process Data and Select Relevant Columns
 
-```{r process}
-
+``` r
 df <- big12_raw %>%
   # filter rows to return relevant subset
   filter(skill == "Attack") %>%
@@ -94,17 +81,19 @@ df <- big12_raw %>%
   ) %>%
   # drop na's in the data
   tidyr::drop_na()
-
 ```
 
 # Split Data in to Train/Test Sets and Resamples
 
-Using a relatively large training set because there's plenty of data and I'm a little bit concerned about the potential for overfitting.
+Using a relatively large training set because there’s plenty of data and
+I’m a little bit concerned about the potential for overfitting.
 
-The data is split into a training set which is 60% of the full dataset, and a testing set which is the remaining 40%. The training set is then split into ten different resamples (split into analysis and assessment sets) using k-fold cross-validation.
+The data is split into a training set which is 60% of the full dataset,
+and a testing set which is the remaining 40%. The training set is then
+split into ten different resamples (split into analysis and assessment
+sets) using k-fold cross-validation.
 
-```{r split}
-
+``` r
 # set seed for reproducibility
 set.seed(456)
 
@@ -130,15 +119,15 @@ train_folds <-
     v = 10,
     strata = evaluation_code
   )
-
 ```
 
 # Save Data
 
-We will save the processed dataset, the initial train/test split, the train/test sets, and the resamples, so that they can be imported in the notebooks that follow.
+We will save the processed dataset, the initial train/test split, the
+train/test sets, and the resamples, so that they can be imported in the
+notebooks that follow.
 
-```{r save}
-
+``` r
 save(
   # data
   df,

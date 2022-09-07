@@ -2,21 +2,11 @@
 title: 'Training & Identifying Best Performing Models'
 author: "Paul Johnson"
 date: '`r Sys.Date()`'
-output: 
-  html_document: 
-    theme: lumen
-    ig_asp: 0.8
-    fig_width: 10
-    out_width: "100%"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  cache = FALSE,
-  warning = FALSE,
-  message = FALSE
-  )
+#| label: setup
+#| include: false
 
 # import packages
 library(dplyr)
@@ -65,7 +55,8 @@ We will try the following algorithms:
 -   Random Forest
 -   XGBoost
 
-```{r models}
+```{r}
+#| label: models
 
 # logistic regression
 log_mod <- 
@@ -115,7 +106,8 @@ xgb_mod <-
 
 ## Set Workflow Pipeline
 
-```{r workflow}
+```{r}
+#| label: workflow
 
 # specify the workflow set
 model_pipeline <- 
@@ -139,7 +131,9 @@ model_pipeline <-
 
 ## Fit Candidates to Resamples
 
-```{r fit, cache = TRUE}
+```{r}
+#| label: fit
+#| cache: true
 
 # fit models on resamples
 train_models <-
@@ -158,7 +152,8 @@ train_models <-
 
 ```
 
-```{r save-model}
+```{r}
+#| label: save-model
 
 readr::write_rds(train_models, here::here("data", "trained_models.rds"))
 
@@ -170,7 +165,8 @@ The Logistic Regression is producing predictions from a "rank-deficient fit". I 
 
 We can evaluate model performance using the {workflowsets} function *rank_results()* but getting results that are easily intuited can be a little fiddly, so we will use a custom function *evaluate_performance()* that is defined in the functions directory.
 
-```{r evaluation}
+```{r}
+#| label: evaluation
 
 train_models %>%
   evaluate_performance("roc_auc")

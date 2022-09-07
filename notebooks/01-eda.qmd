@@ -2,21 +2,11 @@
 title: "Exploring Data & Identifying Model Features"
 author: "Paul Johnson"
 date: '`r Sys.Date()`'
-output: 
-  html_document: 
-    theme: lumen
-    ig_asp: 0.8
-    fig_width: 10
-    out_width: "100%"
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  cache = FALSE,
-  warning = FALSE,
-  message = FALSE
-  )
+```{r}
+#| label: setup
+#| include: false
 
 # import packages
 library(dplyr)
@@ -40,7 +30,8 @@ The first step is to carry out Exploratory Data Analysis (EDA), with the intenti
 # Understanding the Structure of the Data
 
 
-```{r glimpse}
+```{r}
+#| label: glimpse
 
 # take a look at the training set
 glimpse(train_df)
@@ -57,7 +48,8 @@ Several of the character variables look like they could be transformed to be mor
 
 The target variable is *evaluation_code*. Though in the raw data it isn't a binary variable, we are interested in just two of the variable's values (kills and errors) so it was transformed in the initial processing step. Kills are the positive event level (points scored by the team making the play), while errors are the negative event level.
 
-```{r target-frequencies}
+```{r}
+#| label: target-frequencies
 
 train_df %>%
   tabyl(evaluation_code)
@@ -66,7 +58,8 @@ train_df %>%
 
 The target classes are relatively imbalanced, which could be a problem. The classes are split \~70/30, with kills being the majority class. This means that our models are at risk of overprescribing kills in the predictions, because machine learning algorithms like to take shortcuts! If a model was to predict that every outcome will be a kill, it would be right \~70% of the time.
 
-```{r target-plot}
+```{r}
+#| label: target-plot
 
 train_df %>%
   ggplot(aes(evaluation_code)) +
@@ -84,7 +77,8 @@ The bar plot probably does a better job of demonstrating how significant the imb
 
 Skill type seems like one of the most likely variables to contain significant predictive power. The type of attack seems like it should contain information about the conditional probability of success.
 
-```{r skill-type-frequencies}
+```{r}
+#| label: skill-type-frequencies
 
 train_df %>%
   tabyl(skill_type)
@@ -95,7 +89,8 @@ Just over 50% of the skill type's are head ball attacks, while the remaining 50%
 
 *I've created functions to plot the different charts to avoid repetition. The functions can be found in '~/src/functions'.*
 
-```{r skill-type}
+```{r}
+#| label: skill-type
 
 plot_bars(skill_type)
 
@@ -103,7 +98,8 @@ plot_bars(skill_type)
 
 It looks like there's some variance in skill type split by the outcome.
 
-```{r skill-type-props}
+```{r}
+#| label: skill-type-props
 
 train_df %>%
   tabyl(skill_type, evaluation_code) %>%
@@ -124,7 +120,8 @@ All this suggests there's definitely some predictive power in this feature.
 
 In addition to skill types, skill subtypes could also contain some useful variance and potentially some predictive power.
 
-```{r skill-subtype-frequencies}
+```{r}
+#| label: skill-subtype-frequencies
 
 train_df %>%
   tabyl(skill_subtype)
@@ -133,7 +130,8 @@ train_df %>%
 
 The vast majority of the subtypes are hard spikes (\~88%), which limits how useful this feature can be.
 
-```{r skill-subtype}
+```{r}
+#| label: skill-subtype
 
 plot_bars(skill_subtype)
 
@@ -141,7 +139,8 @@ plot_bars(skill_subtype)
 
 It's also pretty difficult to draw anything from the subtype plot, because of how overrepresented hard spikes are.
 
-```{r skill-subtype-props}
+```{r}
+#| label: skill-subtype-props
 
 train_df %>%
   tabyl(skill_subtype, evaluation_code) %>%
@@ -163,13 +162,15 @@ There's a subset of four location variables that correspond to x and y coordinat
 
 I think we gain more from the x, y coordinates than the zones and subzones. The more variance the better in this case.
 
-```{r start-coordinates-plot}
+```{r}
+#| label: start-coordinates-plot
 
 plot_coordinates(start_coordinate_x, start_coordinate_y)
 
 ```
 
-```{r end-coordinates-plot}
+```{r}
+#| label: end-coordinates-plot
 
 plot_coordinates(end_coordinate_x, end_coordinate_y)
 
@@ -181,7 +182,8 @@ I think this is because there's simply less variance in the start coordinates, s
 
 ## Blockers
 
-```{r blockers}
+```{r}
+#| label: blockers
 
 train_df %>%
   tabyl(blockers)
@@ -198,7 +200,8 @@ There's plenty of variance across different numbers of blockers, which isn't esp
 
 ## Team/Opponent Setter Position
 
-```{r setter-positions}
+```{r}
+#| label: setter-positions
 
 train_df %>%
   tabyl(team_setter_position)
@@ -223,7 +226,8 @@ There isn't tons of variance across different values of team and opponent setter
 
 ## Rotation
 
-```{r rotation}
+```{r}
+#| label: rotation
 
 train_df %>%
   tabyl(rotation)
@@ -237,7 +241,8 @@ Rotation is just another representation of team setter position.
 
 ## Contact
 
-```{r contact}
+```{r}
+#| label: contact
 
 train_df %>%
   tabyl(contact)

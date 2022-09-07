@@ -2,22 +2,11 @@
 title: "Optimizing & Testing the Best Performing Models"
 author: "Paul Johnson"
 date: '`r Sys.Date()`'
-output: 
-  html_document: 
-    theme: lumen
-    ig_asp: 0.8
-    fig_width: 10
-    out_width: "100%"
 ---
 
-```{r setup, include=FALSE}
-
-knitr::opts_chunk$set(
-  echo = TRUE,
-  cache = FALSE,
-  warning = FALSE,
-  message = FALSE
-  )
+```{r}
+#| label: setup
+#| include: false
 
 # import packages
 library(dplyr)
@@ -61,7 +50,8 @@ While the Random Forest ended up performing slightly better on three out of four
 
 ## Define Models for Tuning
 
-```{r models}
+```{r}
+#| label: models
 
 # random forest
 rf_mod <-
@@ -99,7 +89,8 @@ xgb_params <- xgb_mod %>%
 
 ## Set Worklow Pipeline
 
-```{r workflow}
+```{r}
+#| label: workflow
 
 model_pipeline <- 
    workflow_set(
@@ -122,7 +113,8 @@ model_pipeline %>%
 
 First we need to specify the grid search process.
 
-```{r grid}
+```{r}
+#| label: grid
 
 # specify grid search process
 grid_ctrl <- tune::control_grid(
@@ -137,7 +129,10 @@ grid_ctrl <- tune::control_grid(
 
 Then we are ready to tune the models.
 
-```{r tune, cache = TRUE, results = 'hide'}
+```{r}
+#| label: tune
+#| cache: true
+#| output: false
 
 # tune models
 tune_models <-
@@ -160,7 +155,8 @@ tune_models <-
 
 ```
 
-```{r save-model}
+```{r}
+#| label: save-model
 
 readr::write_rds(tune_models, here::here("data", "tuned_models.rds"))
 
@@ -168,7 +164,8 @@ readr::write_rds(tune_models, here::here("data", "tuned_models.rds"))
 
 ## Evaluate Performance
 
-```{r evaluation}
+```{r}
+#| label: evaluation
 
 tune_models %>%
   evaluate_performance("roc_auc", select_best = TRUE)
