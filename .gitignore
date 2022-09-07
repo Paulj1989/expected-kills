@@ -61,3 +61,5 @@ data/intermediate/recipe.rds
 # model objects
 outputs/models/tuned_models.rds
 outputs/models/trained_models.rds
+
+/.quarto/
